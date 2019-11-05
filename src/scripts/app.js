@@ -4,15 +4,18 @@ import Firebase from 'firebase';
 import Firebaseconfig from './storageClasses/firebase_config';
 
 import Storage from './storageClasses/storageClass';
-import Location from './location';
-import Controller from './controller';
+import Location from './classInstances/location';
+import Controller from './classInstances/controller';
 import DisplayHandler from './displayClasses/displayHandlerClass';
+import Authentication from './classInstances/authentication';
+import Notifications from './classInstances/notifications';
 
 import LoadingDisplay from './displayClasses/loadingDisplayClass';
 import HomeDisplay from './displayClasses/homeDisplayClass';
 import MenuDisplay from './displayClasses/menuDisplayClass';
 import LocationDisplay from './displayClasses/locationDisplayClass';
 import AuthDisplay from './displayClasses/authDisplayClass';
+import Popup from './displayClasses/popupDisplayClass';
 
 // init firebaseApp
 Firebase.initializeApp(Firebaseconfig);
@@ -35,6 +38,7 @@ const controller = new Controller(homeDisplay, menuDisplay, locationDisplay, aut
 
 async function init() {
 	controller.addListeners();
+
 	// wait for the user to login then load users and displays
 	Firebase.auth().onAuthStateChanged(async (user) => {
 		if (user) {
@@ -43,18 +47,31 @@ async function init() {
 			DisplayHandler.goToDisplay(loadingDisplay);
 
 			// check if new users have to be fetched
-			await Storage.checkNeedForNewUsers()
-				.then(async () => {
-					// wait untill location has been received, then switch to homedisplay
-					await Location.setMyLocation();
-				})
+			await Storage.checkNeedForNewUsers();
 
-				.then(() => {
-					DisplayHandler.goToDisplay(homeDisplay);
-					// Update both displays and update the eventlisteners
-					homeDisplay.updateDOM();
-					menuDisplay.updateDOM();
-				});
+			// wait untill location has been received, then switch to homedisplay
+			await Location.setMyLocation();
+
+			// wait untill notification permission is granted
+			loadingDisplay.setMessage(2);
+			await Notifications.checkPermision();
+
+			// go to homepage
+			DisplayHandler.goToDisplay(homeDisplay);
+
+			// push notification
+			Notifications.push(`Welcome, ${Authentication.getCurrentUser().email}`);
+
+			// show popup if email is not verified
+			if (!Authentication.isVerified()) {
+				const popup = new Popup('Please make sure to verify your email adress!');
+				popup.build();
+			}
+
+			// Update both displays and update the eventlisteners
+			homeDisplay.updateDOM();
+			menuDisplay.updateDOM();
+			// });
 		} else {
 			// if no one is logged in go to authentication page
 			DisplayHandler.goToDisplay(authDisplay);

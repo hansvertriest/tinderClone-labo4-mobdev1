@@ -1,6 +1,6 @@
 import StorageArray from './storageArrayClass';
 import StorageKeyValue from './storageKeyValueClass';
-import Location from '../location';
+import Location from '../classInstances/location';
 import User from './userClass';
 
 class Storage {

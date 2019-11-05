@@ -26,7 +26,7 @@
 		<div id="loginContainer" class="disabled display">
 			<div id="signupForm" class="authForm disabled">
 				<p>Create account</p>
-				<form action="">
+				<form>
 					<input type="text" placeholder="Email" id="emailSignup">
 					<input type="password" placeholder="Password" id="passwordSignup">
 					<div id="errorSignup" class="error"></div>
@@ -36,13 +36,22 @@
 			</div>
 			<div id="loginForm" class="authForm">
 				<p>Log in</p>
-				<form action="">
+				<form>
 					<input type="text" placeholder="Email" id="emailLogin">
 					<input type="password" placeholder="Password" id="passwordLogin">
 					<div id="errorLogin" class="error"></div>
 					<button id="submitLogin" class="submitBtn">Login</button>
 				</form>
 				<button id="goToSignupForm" class="goToBtn">Don't have an account?</button>
+				<button id="goToForgotPass" class="goToBtn">Forgot password?</button>
+			</div>
+			<div id="forgotPassForm" class="authForm disabled">
+				<p>Forgot password?</p>
+				<form>
+					<input type="text" placeholder="Email" id="emailForgotPassword">
+					<button id="submitForgotPassword" class="submitBtn">Sent email</button>
+				</form>
+				<button id="returnFromForgotPassword" class="goToBtn">Nevermind...</button>
 			</div>
 		</div>
 		<div id="loadingContainer" class="display"></div>

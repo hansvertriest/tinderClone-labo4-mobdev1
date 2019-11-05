@@ -1,6 +1,6 @@
-import Storage from './storageClasses/storageClass';
-import Authentication from './authenticationClass';
-import DisplayHandler from './displayClasses/displayHandlerClass';
+import Storage from '../storageClasses/storageClass';
+import Authentication from './authentication';
+import DisplayHandler from '../displayClasses/displayHandlerClass';
 
 
 export default class Controller {
@@ -33,6 +33,9 @@ export default class Controller {
 		this.passwordLogin = document.getElementById('passwordLogin');
 		this.goToLoginForm = document.getElementById('goToLoginForm');
 		this.goToSignupForm = document.getElementById('goToSignupForm');
+		this.goToForgotPass = document.getElementById('goToForgotPass');
+		this.submitForgotPassword = document.getElementById('submitForgotPassword');
+		this.emailForgotPassword = document.getElementById('emailForgotPassword');
 	}
 
 	updateImgListeners() {
@@ -126,6 +129,16 @@ export default class Controller {
 		this.goToLoginForm.addEventListener('click', (event) => {
 			event.preventDefault();
 			this.authDisplay.switchToLoginForm();
+		});
+		this.goToForgotPass.addEventListener('click', () => {
+			Authentication.updatePassword();
+		});
+		this.goToForgotPass.addEventListener('click', () => {
+			this.authDisplay.switchToForgotPassword();
+		});
+		this.submitForgotPassword.addEventListener('click', (event) => {
+			event.preventDefault();
+			Authentication.sendPasswordReset(this.emailForgotPassword.value);
 		});
 	}
 }

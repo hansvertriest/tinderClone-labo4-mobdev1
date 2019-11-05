@@ -97,12 +97,20 @@ class Builder {
 		actionSection.innerHTML += '<button id="likeBtn" class="btn"><i class="fas fa-heart"></i></button>';
 		main.appendChild(actionSection);
 
+		const accountSection = document.createElement('div');
+		accountSection.setAttribute('id', 'accountSection');
+
+		const greeting = document.createElement('p');
+		greeting.setAttribute('id', 'greeting');
+		accountSection.appendChild(greeting);
+
 		const signOutBtn = document.createElement('button');
-		signOutBtn.innerText = 'Sign Out';
+		signOutBtn.innerText = 'Log out';
 		signOutBtn.setAttribute('id', 'signOutBtn');
-		main.appendChild(signOutBtn);
+		accountSection.appendChild(signOutBtn);
 
 		parentElement.appendChild(header);
+		parentElement.appendChild(accountSection);
 		parentElement.appendChild(main);
 	}
 

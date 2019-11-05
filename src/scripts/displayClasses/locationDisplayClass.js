@@ -1,6 +1,6 @@
 import mapboxgl from 'mapbox-gl/dist/mapbox-gl';
 import * as turf from '@turf/turf';
-import Builder from '../htmlBuilder';
+import Builder from '../classInstances/htmlBuilder';
 
 
 export default class LocationDisplay {

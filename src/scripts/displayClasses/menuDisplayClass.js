@@ -1,5 +1,5 @@
 import Storage from '../storageClasses/storageClass';
-import Builder from '../htmlBuilder';
+import Builder from '../classInstances/htmlBuilder';
 
 export default class menuDisplay {
 	constructor(parentElement) {

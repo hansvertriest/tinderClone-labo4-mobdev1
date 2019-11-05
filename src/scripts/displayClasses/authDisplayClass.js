@@ -1,10 +1,11 @@
-import Builder from '../htmlBuilder';
+import Builder from '../classInstances/htmlBuilder';
 
 export default class authDisplay {
 	constructor(parentElement) {
 		this.parentElement = parentElement;
 		this.signupForm = document.getElementById('signupForm');
 		this.loginForm = document.getElementById('loginForm');
+		this.forgotPassForm = document.getElementById('forgotPassForm');
 		this.currentForm = this.loginForm;
 		// Builder.buildAuthentication(parentElement);
 	}
@@ -31,5 +32,11 @@ export default class authDisplay {
 		this.currentForm = this.loginForm;
 		this.loginForm.classList.remove('disabled');
 		this.signupForm.classList.add('disabled');
+	}
+
+	switchToForgotPassword() {
+		this.currentForm = this.forgotPassForm;
+		this.forgotPassForm.classList.remove('disabled');
+		this.loginForm.classList.add('disabled');
 	}
 }

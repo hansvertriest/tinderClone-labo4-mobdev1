@@ -1,6 +1,7 @@
 import Storage from '../storageClasses/storageClass';
-import Builder from '../htmlBuilder';
-import Location from '../location';
+import Builder from '../classInstances/htmlBuilder';
+import Location from '../classInstances/location';
+import Authentication from '../classInstances/authentication';
 
 export default class homeDisplay {
 	constructor(parentElement) {
@@ -9,10 +10,12 @@ export default class homeDisplay {
 		this.nameDOM = document.getElementById('nameAge');
 		this.picture = document.getElementById('img');
 		this.dist = document.getElementById('dist');
+		this.greeting = document.getElementById('greeting');
 	}
 
 	updateDOM() {
 		// input data
+		this.greeting.innerHTML = `Welcome, ${Authentication.getCurrentUser().email}`;
 		Storage.download();
 		const user = Storage.users.getValueById(Storage.displayedUsrID.value);
 		this.nameDOM.innerText = `${user.name}, ${user.age}`;
