@@ -2,14 +2,263 @@
  * The main.css styles
  */
 
+:root {
+		--var-red: #f76b60;
+		--grey-light: #e0e0e0;
+		--grey-dark: #595959;
+		--bg-color: #f7f7f7;
+}
+
 body {
-    font-size: 12px;
-    margin: 0 auto;
-    background: #fefefe;
-    height: 100vh;
+	font-size: 12px;
+	margin: 0 auto;
+	background: #fefefe;
+	height: 100vh;
 }
 
 #app {
-    height: 100%;
-    position: relative;
+	position: relative;
+	height: 800px;
+	top: 50px;
+	max-width: 350px;
+	margin-left: auto;
+	margin-right: auto;
+	border: 3px solid grey;
+	border-radius: 10px;
+	padding: 12px;
+	background-color: var(--bg-color);
+}
+#mainPage {
+	
+}
+
+header {
+    display:flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    min-width: 100%;
+}
+
+.iconHeader i{
+    font-size: 30px;
+    color: var(--var-red);
+}
+
+.logo {
+    width: 40%;
+}
+.logo img{
+    width: 100%;
+}
+
+main{
+	display:flex;
+	flex-direction: column;
+	justify-content: flex-end;
+}
+.profile {
+
+}
+
+#img {
+	width: 100%;
+	height: 350px;
+	background-size: cover;
+}
+
+h1 {
+	font-family: 'Arvo', serif;
+	font-size: 30px;
+	margin:0;
+	flex-shrink: 0;
+}
+#data{
+	display: flex;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	align-items: center;
+	margin: 15px auto 10px 0;
+	width: 95%;
+	height: 80px;
+}
+#data #dist {
+	font-size: 28px;
+	color: var(--grey-dark);
+	margin: 0px 0 0 10px;
+	font-family: 'Raleway';
+}
+
+#friends{
+      font-family: 'Roboto', sans-serif;
+      font-size: 15px;
+}
+
+hr {
+    margin: 10px 0;
+}
+
+.actionSection {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+}
+
+.btn {
+    border: 3px solid var(--grey-dark);
+    border-radius: 50%;
+    height: 100px;
+    width: 100px;
+    background-color: var(--grey-light);
+    color: var(--var-red);
+    font-size: 40px;
+}
+#locatieBtn {
+    height: 50px;
+    width: 50px;
+    font-size: 20px;
+}
+
+#accepted{
+    display:flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.acceptedThumb {
+    border: 5px solid var(--var-red);
+    margin: 2px;
+    width: 86px; 
+    height: 86px;
+    background-size: cover;
+    border-radius: 50%;
+}
+
+/* MenuPage */
+.disabled {
+	display: none!important;
+}
+#menuPage{
+	display:flex;
+}
+
+#dislikedMenu {
+	min-width : 100%;
+}
+#likedMenu {
+	min-width : 100%;
+}
+#dataLiked, #dataDisliked {
+	overflow-x: hidden;
+	overflow-y: scroll;
+	height: 650px;
+}
+#likedMenu > button, #dislikedMenu > button {
+	background: none;
+	border: none;
+}
+.likedMenuHeader > h2, .likedMenuHeader > h2 {
+	display: inline-block;
+	font-family: 'Arvo', serif;
+	font-size: 25px;
+}
+
+.likedMenuHeader{
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	margin: auto;
+}
+.likednMenuNavBtn {
+	background-color: var(--bg-color);;
+	border: none;
+	font-size: 18px;
+}
+#goToDislikedBtn {
+	justify-self: flex-end;
+}
+.dislikedUserDiv, .likedUserDiv{
+	display: flex;
+	justify-content: space-between;
+	align-items:center;
+	
+}
+.dislikedUserDiv:nth-of-type(n),.likedUserDiv:nth-of-type(n) {
+	background-color: #e0dede;
+}
+.dislikedUserDiv:nth-of-type(2n),.likedUserDiv:nth-of-type(2n) {
+	background-color: white;
+}
+.group {
+	display: flex;
+	align-items:center;
+}
+.imgSmall{
+	border: 5px solid var(--var-red);
+	margin: 8px;
+	width: 78px; 
+	height: 78px;
+	background-size: cover;
+	border-radius: 50%;
+}
+.likedUserDiv .group > p, .dislikedUserDiv .group > p {
+	font-family: 'Raleway', sans-serif;
+	font-weight: 500;
+	font-size: 22px;
+	margin-left: 17px;
+} 
+.likedUserDiv > button, .dislikedUserDiv > button {
+	background-color: inherit;
+	border: 2px solid var(--grey-dark);
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	margin: 0 20px;
+	color: var(--var-red);
+}
+
+/* loadingscreen */
+#loadingContainer {
+	background-color: var(--var-red);
+	height: 100%;
+	width: 100%;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+	color: var(--bg-color);
+	font-size: 15px;
+}
+
+#loadingContainer i {
+	font-size: 40px;
+	-webkit-animation:spin 4s linear infinite;
+	-moz-animation:spin 4s linear infinite;
+	animation:spin 4s linear infinite;
+}
+
+@-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+/* map */
+#mapContainer {
+	width: 100%;
+	height: 100%;
+}
+
+#mapContainer #backBtn {
+	font-size: 30px;
+	color: var(--var-red);
+	background-color: var(--bg-color);
+	border-radius: 50%;
+	position: fixed;
+	z-index: 1;
+	width: 50px;
+	height: 50px;
+	display:flex;
+	justify-content: center;
+	align-items: center;
 }
