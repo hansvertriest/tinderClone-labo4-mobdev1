@@ -4,10 +4,11 @@ import DisplayHandler from './displayClasses/displayHandlerClass';
 
 
 export default class Controller {
-	constructor(homeDisplay, menuDisplay, locationDisplay) {
+	constructor(homeDisplay, menuDisplay, locationDisplay, authDisplay) {
 		this.homeDisplay = homeDisplay;
 		this.menuDisplay = menuDisplay;
 		this.locationDisplay = locationDisplay;
+		this.authDisplay = authDisplay;
 		this.imgsWithListener = [];
 
 		this.menuPage = document.getElementById('menuPage');
@@ -30,6 +31,8 @@ export default class Controller {
 		this.submitLogin = document.getElementById('submitLogin');
 		this.emailLogin = document.getElementById('emailLogin');
 		this.passwordLogin = document.getElementById('passwordLogin');
+		this.goToLoginForm = document.getElementById('goToLoginForm');
+		this.goToSignupForm = document.getElementById('goToSignupForm');
 	}
 
 	updateImgListeners() {
@@ -92,16 +95,37 @@ export default class Controller {
 		this.backBtn.addEventListener('click', () => {
 			DisplayHandler.goToDisplay(this.homeDisplay);
 		});
-		this.submitSignup.addEventListener('click', (event) => {
+		this.submitSignup.addEventListener('click', async (event) => {
 			event.preventDefault();
-			Authentication.signup(this.emailSignup.value, this.passwordSignup.value);
+			// signup = true if there are no errors, else login = errorMessage
+			const signup = await Authentication.signup(this.emailSignup.value, this.passwordSignup.value);
+			if (signup !== true) {
+				this.authDisplay.addErrorMsg(signup);
+			} else {
+				this.authDisplay.clearFields();
+			}
+			this.authDisplay.clearFields();
 		});
-		this.submitLogin.addEventListener('click', (event) => {
+		this.submitLogin.addEventListener('click', async (event) => {
 			event.preventDefault();
-			Authentication.login(this.emailLogin.value, this.passwordLogin.value);
+			// login = true if there are no errors, else login = errorMessage
+			const login = await Authentication.login(this.emailLogin.value, this.passwordLogin.value);
+			if (login !== true) {
+				this.authDisplay.addErrorMsg(login);
+			} else {
+				this.authDisplay.clearFields();
+			}
 		});
 		this.signOutBtn.addEventListener('click', (event) => {
 			Authentication.signout();
+		});
+		this.goToSignupForm.addEventListener('click', (event) => {
+			event.preventDefault();
+			this.authDisplay.switchToSignupForm();
+		});
+		this.goToLoginForm.addEventListener('click', (event) => {
+			event.preventDefault();
+			this.authDisplay.switchToLoginForm();
 		});
 	}
 }

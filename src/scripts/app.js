@@ -31,28 +31,32 @@ const menuDisplay = new MenuDisplay(menuContainer);
 const loadingDisplay = new LoadingDisplay(loadingContainer);
 const locationDisplay = new LocationDisplay(mapContainer);
 const authDisplay = new AuthDisplay(loginContainer);
-const controller = new Controller(homeDisplay, menuDisplay, locationDisplay);
+const controller = new Controller(homeDisplay, menuDisplay, locationDisplay, authDisplay);
 
 async function init() {
 	controller.addListeners();
 	// wait for the user to login then load users and displays
 	Firebase.auth().onAuthStateChanged(async (user) => {
 		if (user) {
+			// sets loading msg to message 1 in loadingDisplay.messages
+			loadingDisplay.setMessage(1);
 			DisplayHandler.goToDisplay(loadingDisplay);
-			// Check if users is set in localStorage True => download all data False => Load users
+
+			// check if new users have to be fetched
 			await Storage.checkNeedForNewUsers()
 				.then(async () => {
 					// wait untill location has been received, then switch to homedisplay
 					await Location.setMyLocation();
 				})
+
 				.then(() => {
 					DisplayHandler.goToDisplay(homeDisplay);
-					// homeDisplay.switchFromDisplay(loadingDisplay);
 					// Update both displays and update the eventlisteners
 					homeDisplay.updateDOM();
 					menuDisplay.updateDOM();
 				});
 		} else {
+			// if no one is logged in go to authentication page
 			DisplayHandler.goToDisplay(authDisplay);
 		}
 	});

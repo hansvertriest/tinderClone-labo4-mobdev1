@@ -4,6 +4,9 @@
 
 :root {
 		--var-red: #f76b60;
+		--var-redDark: #bf2222;
+		--var-blueLight: #b5c1e6;
+		--var-blue: #1a2f6e;
 		--grey-light: #e0e0e0;
 		--grey-dark: #595959;
 		--bg-color: #f7f7f7;
@@ -261,4 +264,50 @@ hr {
 	display:flex;
 	justify-content: center;
 	align-items: center;
+}
+
+/* authentication page */
+#loginContainer {
+	height: 100%;
+}
+
+#loginContainer p {
+	font-family: 'Arvo', serif;
+	font-size: 25px;
+	font-weight: bold;
+}
+.authForm {
+	margin-top: 200px;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	flex-direction: column;
+}
+
+.authForm input {
+	display:block;
+	margin-bottom: 20px;
+	height: 30px;
+}
+
+.authForm .submitBtn {
+	font-family: 'Raleway';
+	background-color: var(--var-red);
+	border-radius: 10px;
+	border: none;
+	color: var(--bg-color);
+	padding: 10px;
+	font-size: 16px;
+	width: 100%;
+	border-bottom: 1px solid var(--var-redDark);
+}
+
+.goToBtn {
+	font-family: 'Raleway';
+	background-color: var(--var-blue);
+	border: none;
+	border-radius: 10px;
+	color: var(--var-blueLight);
+	padding: 6px;
+	margin-top: 15px;
 }

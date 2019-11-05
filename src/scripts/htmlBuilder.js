@@ -108,7 +108,7 @@ class Builder {
 
 	buildLoadingScreen(parentElement) {
 		const text = document.createElement('p');
-		text.innerHTML = 'This app needs your location to function properly!';
+		text.setAttribute('id', 'loadingMsg');
 		const icon = document.createElement('div');
 		icon.innerHTML = '<i class="fas fa-spinner"></i>';
 		parentElement.appendChild(text);

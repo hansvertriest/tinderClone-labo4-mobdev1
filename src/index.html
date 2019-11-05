@@ -23,23 +23,29 @@
 
 <body>
 	<div id="app">
-		<div id="loginContainer" class="display">
-			<div class="signupForm">
+		<div id="loginContainer" class="disabled display">
+			<div id="signupForm" class="authForm disabled">
+				<p>Create account</p>
 				<form action="">
-					<input type="text" id="emailSignup">
-					<input type="text" id="passwordSignup">
-					<button id="submitSignup">signup</button>
+					<input type="text" placeholder="Email" id="emailSignup">
+					<input type="password" placeholder="Password" id="passwordSignup">
+					<div id="errorSignup" class="error"></div>
+					<button id="submitSignup" class="submitBtn">signup</button>
 				</form>
+				<button id="goToLoginForm" class="goToBtn">I already have an account</button>
 			</div>
-			<div class="loginForm">
+			<div id="loginForm" class="authForm">
+				<p>Log in</p>
 				<form action="">
-					<input type="text" id="emailLogin">
-					<input type="text" id="passwordLogin">
-					<button id="submitLogin">Login</button>
+					<input type="text" placeholder="Email" id="emailLogin">
+					<input type="password" placeholder="Password" id="passwordLogin">
+					<div id="errorLogin" class="error"></div>
+					<button id="submitLogin" class="submitBtn">Login</button>
 				</form>
+				<button id="goToSignupForm" class="goToBtn">Don't have an account?</button>
 			</div>
 		</div>
-		<div id="loadingContainer" class="disabled display"></div>
+		<div id="loadingContainer" class="display"></div>
 		<div id="homeContainer" class="disabled display">
 		</div>
 		<div id="menuContainer" class="disabled display">
