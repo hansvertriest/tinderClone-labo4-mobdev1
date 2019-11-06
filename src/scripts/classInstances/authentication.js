@@ -29,13 +29,11 @@ class Authentication {
 	}
 
 	sendPasswordReset(email) {
-		FirebaseApp.auth().sendPasswordResetEmail(email)
-			.then(() => {
-				console.log('sent');
-			})
-			.catch(() => {
-				console.log('not sent');
-			});
+		FirebaseApp.auth().sendPasswordResetEmail(email);
+	}
+
+	getUID(user = this.getCurrentUser()) {
+		return user.uid;
 	}
 
 	getCurrentUser() {

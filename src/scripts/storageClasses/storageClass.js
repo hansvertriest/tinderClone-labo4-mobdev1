@@ -1,7 +1,11 @@
+import Firebase from 'firebase/app';
+
+import Authentication from '../classInstances/authentication';
 import StorageArray from './storageArrayClass';
 import StorageKeyValue from './storageKeyValueClass';
 import Location from '../classInstances/location';
 import User from './userClass';
+
 
 class Storage {
 	constructor() {
@@ -10,6 +14,23 @@ class Storage {
 		this.disliked = new StorageArray('disliked');
 		this.displayedUsrID = new StorageKeyValue('displayedUsrID', 0);
 		this.numberOfUsers = 10;
+	}
+
+	initDB() {
+		this.firestore = Firebase.firestore();
+	}
+
+	async initAccountStorage() {
+		this.firestore.collection('users').doc(Authentication.getUID())
+			.onSnapshot((doc) => {
+				if (!doc.exists) {
+					this.firestore.collection('users').doc(Authentication.getUID()).set({
+						users: '',
+						liked: '',
+						disliked: '',
+					});
+				}
+			});
 	}
 
 	set setNumberOfUsers(value) {
@@ -22,39 +43,46 @@ class Storage {
 	}
 
 	upload() {
-		localStorage.setItem('users', JSON.stringify(this.users.getArray));
-		localStorage.setItem('liked', JSON.stringify(this.liked.getArray));
-		localStorage.setItem('disliked', JSON.stringify(this.disliked.getArray));
+		this.firestore.collection('users').doc(Authentication.getUID()).set({
+			users: JSON.stringify(this.users.getArray),
+			liked: JSON.stringify(this.liked.getArray),
+			disliked: JSON.stringify(this.disliked.getArray),
+		});
 		localStorage.setItem('displayedUsrID', JSON.stringify(this.displayedUsrID.getValue));
 	}
 
 	download() {
-		const dataUsrs = JSON.parse(localStorage.getItem('users'));
-		this.users.setArray = Array.from(dataUsrs).map((user) => new User(user.id, user.name, user.age, user.pictureURL, user.thumbnailURL, user.like, user.coords, user.country));
-		this.liked.setArray = JSON.parse(localStorage.getItem('liked'));
-		this.disliked.setArray = JSON.parse(localStorage.getItem('disliked'));
+		this.firestore.collection('users').doc(Authentication.getUID())
+			.onSnapshot((doc) => {
+				const dataUsrs = JSON.parse(doc.data().users);
+				this.users.setArray = Array.from(dataUsrs).map((user) => new User(user.id, user.name, user.age, user.pictureURL, user.thumbnailURL, user.like, user.coords, user.country));
+				this.liked.setArray = JSON.parse(doc.data().liked);
+				this.disliked.setArray = JSON.parse(doc.data().disliked);
+			});
 		this.displayedUsrID.setValue = JSON.parse(localStorage.getItem('displayedUsrID'));
 	}
 
 	async checkNeedForNewUsers() {
 		return new Promise((resolve) => {
-			// if users array isset in localstorage
-			if (!this.users.isSet) {
-				this.getNewUsers().then(() => { resolve(); });
-			} else {
-				this.download();
-				const idsInLiked = this.liked.getArrayIDs;
-				const idsInDisliked = this.disliked.getArrayIDs;
-				// get ids that aren't in liked or disliked
-				const unAssignedUsrs = this.users.getArrayIDs.filter((id) => !idsInLiked.includes(id)).filter((id) => !idsInDisliked.includes(id));
-				const unAssignedUsrsCount = unAssignedUsrs.length;
-				// if there are less than 3 users to be assigned, get new users
-				if (unAssignedUsrsCount <= 3) {
-					this.getNewUsers().then(() => { resolve(); });
-				} else {
-					resolve();
-				}
-			}
+			this.firestore.collection('users').doc(Authentication.getUID())
+				.onSnapshot((doc) => {
+					if (doc.data().users.length === 0) {
+						this.getNewUsers().then(() => { resolve(); });
+					} else {
+						this.download();
+						const idsInLiked = this.liked.getArrayIDs;
+						const idsInDisliked = this.disliked.getArrayIDs;
+						// get ids that aren't in liked or disliked
+						const unAssignedUsrs = this.users.getArrayIDs.filter((id) => !idsInLiked.includes(id)).filter((id) => !idsInDisliked.includes(id));
+						const unAssignedUsrsCount = unAssignedUsrs.length;
+						// if there are less than 3 users to be assigned, get new users
+						if (unAssignedUsrsCount <= 3) {
+							this.getNewUsers().then(() => { resolve(); });
+						} else {
+							resolve();
+						}
+					}
+				});
 		});
 	}
 

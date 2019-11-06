@@ -19,6 +19,7 @@ import Popup from './displayClasses/popupDisplayClass';
 
 // init firebaseApp
 Firebase.initializeApp(Firebaseconfig);
+Storage.initDB();
 
 // application parameters
 Storage.setNumberOfUsers = 10;
@@ -45,6 +46,9 @@ async function init() {
 			// sets loading msg to message 1 in loadingDisplay.messages
 			loadingDisplay.setMessage(1);
 			DisplayHandler.goToDisplay(loadingDisplay);
+
+			// create a collection for the user if there isn't one already
+			Storage.initAccountStorage();
 
 			// check if new users have to be fetched
 			await Storage.checkNeedForNewUsers();

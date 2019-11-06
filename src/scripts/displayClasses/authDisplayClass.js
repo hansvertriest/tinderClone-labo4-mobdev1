@@ -20,6 +20,8 @@ export default class authDisplay {
 		document.getElementById('passwordSignup').value = '';
 		document.getElementById('emailLogin').value = '';
 		document.getElementById('passwordLogin').value = '';
+		document.getElementById('signupForm').getElementById('error').innerText = '';
+		document.getElementById('loginForm').getElementById('error').innerText = '';
 	}
 
 	switchToSignupForm() {
