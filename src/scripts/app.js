@@ -9,6 +9,7 @@ import Controller from './classInstances/controller';
 import DisplayHandler from './displayClasses/displayHandlerClass';
 import Authentication from './classInstances/authentication';
 import Notifications from './classInstances/notifications';
+import UserFetcher from './storageClasses/UserFetcher';
 
 import LoadingDisplay from './displayClasses/loadingDisplayClass';
 import HomeDisplay from './displayClasses/homeDisplayClass';
@@ -47,11 +48,8 @@ async function init() {
 			loadingDisplay.setMessage(1);
 			DisplayHandler.goToDisplay(loadingDisplay);
 
-			// create a collection for the user if there isn't one already
-			Storage.initAccountStorage();
-
 			// check if new users have to be fetched
-			await Storage.checkNeedForNewUsers();
+			await UserFetcher.getNewUsers();
 
 			// wait untill location has been received, then switch to homedisplay
 			await Location.setMyLocation();
@@ -72,7 +70,7 @@ async function init() {
 				popup.build();
 			}
 
-			// Update both displays and update the eventlisteners
+			// Update both displays
 			homeDisplay.updateDOM();
 			menuDisplay.updateDOM();
 			// });

@@ -1,5 +1,3 @@
-import Builder from '../classInstances/htmlBuilder';
-
 export default class authDisplay {
 	constructor(parentElement) {
 		this.parentElement = parentElement;
@@ -7,7 +5,7 @@ export default class authDisplay {
 		this.loginForm = document.getElementById('loginForm');
 		this.forgotPassForm = document.getElementById('forgotPassForm');
 		this.currentForm = this.loginForm;
-		// Builder.buildAuthentication(parentElement);
+		// TODO: Builder.buildAuthentication(parentElement);
 	}
 
 	addErrorMsg(msg) {
@@ -20,8 +18,8 @@ export default class authDisplay {
 		document.getElementById('passwordSignup').value = '';
 		document.getElementById('emailLogin').value = '';
 		document.getElementById('passwordLogin').value = '';
-		document.getElementById('signupForm').getElementById('error').innerText = '';
-		document.getElementById('loginForm').getElementById('error').innerText = '';
+		document.getElementById('errorSignup').innerText = '';
+		document.getElementById('errorLogin').innerText = '';
 	}
 
 	switchToSignupForm() {

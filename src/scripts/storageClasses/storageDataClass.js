@@ -1,5 +1,5 @@
 export default class StorageData {
-	constructor(name, value) {
+	constructor(name) {
 		this.name = name;
 	}
 

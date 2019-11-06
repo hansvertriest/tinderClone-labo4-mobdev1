@@ -14,15 +14,21 @@ export default class menuDisplay {
 
 		if (Object.values(dislikedMenu.classList).includes('disabled')) {
 			// update liked menu
+			// Get all ids out of the DOM elements, these are the same as the ID of the users
 			const displayedLikes = Array.from(dataLiked.getElementsByClassName('likedUserDiv')).map((node) => this.getUserIdFromDomId(node));
-			// likesToBeAdded = items that are in liked but not displayed
+
+			//  items that are in liked but not displayed
 			const likesToBeAdded = Storage.liked.getArrayIDs.filter((id) => !displayedLikes.includes(id));
-			// likesToBeRemoved = items that are displayed but not in liked
+
+			// items that are displayed but not in liked
 			const likesToBeRemoved = displayedLikes.filter((id) => !Storage.liked.getArrayIDs.includes(id));
 
+			// Add the liked users
 			likesToBeAdded.forEach((id) => {
-				this.createUserListElement(id, dataLiked, true);
+				this.createUserListElement(id, dataLiked, true, Storage.getUserFromLikedAndDisliked(id));
 			});
+
+			// remove the users that should be removed
 			likesToBeRemoved.forEach((id) => {
 				const element = document.getElementById(`userID${id}`);
 				dataLiked.removeChild(element);
@@ -34,7 +40,7 @@ export default class menuDisplay {
 			const dislikesToBeRemoved = displayedDislikes.filter((id) => !Storage.disliked.getArrayIDs.includes(id));
 
 			dislikesToBeAdded.forEach((id) => {
-				this.createUserListElement(id, dataDisliked, false);
+				this.createUserListElement(id, dataDisliked, false, Storage.getUserFromLikedAndDisliked(id));
 			});
 			dislikesToBeRemoved.forEach((id) => {
 				const element = document.getElementById(`userID${id}`);
@@ -43,7 +49,9 @@ export default class menuDisplay {
 		}
 	}
 
-	createUserListElement(id, parentElement, overviewTypeLiked) {
+	createUserListElement(id, parentElement, overviewTypeLiked, user) {
+		// The user ID is set in the DOM element id for later reference
+
 		// create newElement
 		const newElement = document.createElement('div');
 		if (overviewTypeLiked) {
@@ -62,20 +70,20 @@ export default class menuDisplay {
 		const img = document.createElement('div');
 		img.setAttribute('class', 'imgSmall');
 		img.setAttribute('id', `imgUsrID${id}`);
-		img.style.backgroundImage = `url(${Storage.users.array[id].thumbnailURL})`;
+		img.style.backgroundImage = `url(${user.thumbnailURL})`;
 		groupDiv.appendChild(img);
 
 
 		// create paragraph with the name
 		const newName = document.createElement('p');
-		newName.innerText = Storage.users.array[id].name;
+		newName.innerText = user.name;
 		groupDiv.appendChild(newName);
 
 		// create button
 		const dislikeBtn = document.createElement('button');
 		dislikeBtn.innerHTML = '<i class="fas fa-times">';
 		dislikeBtn.addEventListener('click', () => {
-			Storage.removeAssignment(Storage.users.getValueById(id));
+			Storage.removeAssignment(user);
 			this.updateDOM();
 		});
 		newElement.appendChild(dislikeBtn);
@@ -87,6 +95,7 @@ export default class menuDisplay {
 	switchOverview() {
 		const likedMenu = document.getElementById('likedMenu');
 		const dislikedMenu = document.getElementById('dislikedMenu');
+
 		if (Object.values(dislikedMenu.classList).includes('disabled')) {
 			// switch to dislikedmenu
 			likedMenu.classList.add('disabled');

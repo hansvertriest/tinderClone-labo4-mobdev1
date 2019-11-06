@@ -1,6 +1,7 @@
 import Storage from '../storageClasses/storageClass';
 import Authentication from './authentication';
 import DisplayHandler from '../displayClasses/displayHandlerClass';
+import UserFetcher from '../storageClasses/UserFetcher';
 
 
 export default class Controller {
@@ -9,6 +10,7 @@ export default class Controller {
 		this.menuDisplay = menuDisplay;
 		this.locationDisplay = locationDisplay;
 		this.authDisplay = authDisplay;
+
 		this.imgsWithListener = [];
 
 		this.menuPage = document.getElementById('menuPage');
@@ -38,17 +40,17 @@ export default class Controller {
 		this.emailForgotPassword = document.getElementById('emailForgotPassword');
 	}
 
-	updateImgListeners() {
+	// updates the listeners from the menu
+	updateMenuImgListeners() {
 		Array.from(this.menuPage.getElementsByClassName('imgSmall')).forEach((node) => {
 			// Check if this element already has a listener
 			if (!this.imgsWithListener.includes(node)) {
+				//  add listener
 				node.addEventListener('click', () => {
-					// switch to homeDisplay, update the displayedUsrID to clicked user, update the SwipeDOM
+					// switch to homeDisplay, update the displayedUsrID to clicked user, update the homeDisplay
 					const userID = parseInt(node.getAttribute('id').slice(8), 10);
 					DisplayHandler.goToDisplay(this.homeDisplay);
-					// this.homeDisplay.switchFromDisplay(this.menuDisplay);
-					Storage.displayedUsrID.setValue = userID;
-					Storage.upload();
+					Storage.displayedUser.setValue = Storage.getUserFromLikedAndDisliked(userID);
 					this.homeDisplay.updateDOM();
 				});
 				this.imgsWithListener.push(node);
@@ -57,24 +59,32 @@ export default class Controller {
 	}
 
 	addListeners() {
+		// homeDislay events
 		this.likeBtn.addEventListener('click', async () => {
-			Storage.addLike(Storage.users.getValueById(Storage.displayedUsrID.value));
+			Storage.addLike(Storage.displayedUser.value);
 			// check if new users should be fetched
-			await Storage.checkNeedForNewUsers();
-			this.homeDisplay.getNextDisplayedUser();
+			await UserFetcher.checkNeedForNewUsers();
+			Storage.getNextDisplayedUser();
 			this.homeDisplay.updateDOM();
 		});
 		this.rejectBtn.addEventListener('click', async () => {
-			Storage.removeLike(Storage.users.getValueById(Storage.displayedUsrID.value));
-			await Storage.checkNeedForNewUsers();
-			this.homeDisplay.getNextDisplayedUser();
+			Storage.removeLike(Storage.displayedUser.value);
+			await UserFetcher.checkNeedForNewUsers();
+			Storage.getNextDisplayedUser();
 			this.homeDisplay.updateDOM();
 		});
 		this.menuBtn.addEventListener('click', () => {
 			DisplayHandler.goToDisplay(this.menuDisplay);
 			this.menuDisplay.updateDOM();
-			this.updateImgListeners();
+			this.updateMenuImgListeners();
 		});
+		this.locatieBtn.addEventListener('click', () => {
+			DisplayHandler.goToDisplay(this.locationDisplay);
+			const { long, lat } = Storage.displayedUser.value.coords;
+			this.locationDisplay.updateCircle(long, lat);
+			this.locationDisplay.goToCoords(long, lat);
+		});
+		// menuDisplay events
 		this.homeBtn.addEventListener('click', () => {
 			DisplayHandler.goToDisplay(this.homeDisplay);
 			this.homeDisplay.updateDOM();
@@ -82,36 +92,31 @@ export default class Controller {
 		this.goToDislikedBtn.addEventListener('click', () => {
 			this.menuDisplay.switchOverview();
 			this.menuDisplay.updateDOM();
-			this.updateImgListeners();
+			this.updateMenuImgListeners();
 		});
 		this.goToLikedBtn.addEventListener('click', () => {
 			this.menuDisplay.switchOverview();
 			this.menuDisplay.updateDOM();
-			this.updateImgListeners();
+			this.updateMenuImgListeners();
 		});
-		this.locatieBtn.addEventListener('click', () => {
-			DisplayHandler.goToDisplay(this.locationDisplay);
-			const { long, lat } = Storage.users.getValueById(Storage.displayedUsrID.value).coords;
-			this.locationDisplay.updateCircle(long, lat);
-			this.locationDisplay.goToCoords(long, lat);
-		});
+		// locationDisplay events
 		this.backBtn.addEventListener('click', () => {
 			DisplayHandler.goToDisplay(this.homeDisplay);
 		});
+		// authDisplay events
 		this.submitSignup.addEventListener('click', async (event) => {
 			event.preventDefault();
-			// signup = true if there are no errors, else login = errorMessage
+			// signup returns if there are no errors => true, else => errorMessage
 			const signup = await Authentication.signup(this.emailSignup.value, this.passwordSignup.value);
 			if (signup !== true) {
 				this.authDisplay.addErrorMsg(signup);
 			} else {
 				this.authDisplay.clearFields();
 			}
-			this.authDisplay.clearFields();
 		});
 		this.submitLogin.addEventListener('click', async (event) => {
 			event.preventDefault();
-			// login = true if there are no errors, else login = errorMessage
+			// signup returns if there are no errors => true, else => errorMessage
 			const login = await Authentication.login(this.emailLogin.value, this.passwordLogin.value);
 			if (login !== true) {
 				this.authDisplay.addErrorMsg(login);
@@ -120,6 +125,8 @@ export default class Controller {
 			}
 		});
 		this.signOutBtn.addEventListener('click', (event) => {
+			event.preventDefault();
+			Storage.clearTempStorage();
 			Authentication.signout();
 		});
 		this.goToSignupForm.addEventListener('click', (event) => {

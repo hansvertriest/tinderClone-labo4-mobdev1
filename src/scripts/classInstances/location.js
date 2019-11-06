@@ -2,7 +2,7 @@ import * as turf from '@turf/turf';
 
 class Location {
 	async setMyLocation() {
-		return new Promise((resolve, reject) => {
+		return new Promise((resolve) => {
 			navigator.geolocation.getCurrentPosition((position) => {
 				this.myLocation = {
 					lat: position.coords.latitude, long: position.coords.longitude,

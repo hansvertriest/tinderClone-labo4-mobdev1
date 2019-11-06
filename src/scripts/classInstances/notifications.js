@@ -8,7 +8,6 @@ class Notifications {
 	async checkPermision() {
 		return Notification.requestPermission((response) => {
 			if (response === 'denied') {
-				console.log('rrr');
 				return false;
 			}
 			return true;
