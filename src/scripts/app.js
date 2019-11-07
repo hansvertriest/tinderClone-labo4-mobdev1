@@ -22,8 +22,8 @@ Firebase.initializeApp(Firebaseconfig);
 Storage.initDB();
 
 // application parameters
-Storage.setNumberOfUsers = 5;
-Storage.setUserFetchBuffer = 3;
+Storage.setNumberOfUsers = 10;
+Storage.setUserFetchBuffer = 2;
 
 // instances of displays and controller
 const homeContainer = document.getElementById('homeContainer');

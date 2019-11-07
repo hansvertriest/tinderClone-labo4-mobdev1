@@ -24,7 +24,7 @@ class UserFetcher {
 		Storage.download();
 		Storage.users.setArray = [];
 		const userDataJSON = await this.getData(Storage.numberOfUsers)
-			.catch(() => new Popup('Seems like randomuser.me is currently unavailable!'));
+			.catch(() => new Popup('Seems like randomuser.me is currently unavailable!').build());
 
 		// For every user: fetch coordinates, then create a User object with userdata, then add this to Storage.users
 		return new Promise((resolve) => {

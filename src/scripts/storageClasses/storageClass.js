@@ -10,8 +10,8 @@ class Storage {
 		this.users = new StorageArray('users');
 		this.liked = new StorageArray('liked');
 		this.disliked = new StorageArray('disliked');
-		this.displayedUser = new StorageKeyValue('displayedUser', {});
-		this.displayedUser2 = new StorageKeyValue('displayedUser', {});
+		this.displayedUser = new StorageKeyValue('displayedUser', { id: undefined });
+		this.displayedUser2 = new StorageKeyValue('displayedUser', { id: undefined });
 		this.likedToBeRemoved = new StorageArray('likedToBeRemoved');
 		this.dislikedToBeRemoved = new StorageArray('dislikedToBeRemoved');
 		this.numberOfUsers = 10;
@@ -35,7 +35,7 @@ class Storage {
 		const usersSortedRandomly = this.users.getArray.sort(() => 0.5 - Math.random());
 		const [a, b] = usersSortedRandomly;
 		// if displayedUser is empty
-		if (Object.keys(this.displayedUser.getValue).length === 0) {
+		if (this.displayedUser.getValue.id === undefined) {
 			this.displayedUser.setValue = a;
 			this.displayedUser2.setValue = b;
 		} else {
@@ -101,7 +101,7 @@ class Storage {
 						this.liked.setArray = collection.docs.map((doc) => doc.data());
 					}
 				})
-				.catch(() => new Popup('Seems like firebase is currently unavailable!'));
+				.catch(() => new Popup('Seems like firebase is currently unavailable!').build());
 
 			this.firestore.collection('users').doc(Authentication.getUID()).collection('disliked').get()
 				.then((collection) => {
@@ -112,7 +112,7 @@ class Storage {
 				.then(() => {
 					resolve();
 				})
-				.catch(() => new Popup('Seems like firebase is currently unavailable!'));
+				.catch(() => new Popup('Seems like firebase is currently unavailable!').build());
 		});
 	}
 

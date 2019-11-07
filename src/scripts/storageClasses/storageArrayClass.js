@@ -48,7 +48,7 @@ export default class StorageArray extends Data {
 	}
 
 	remove(user) {
-		this.array = this.array.filter((object) => object.id !== user.id);
+		this.array = this.array.filter((object) => object !== user);
 		this.isRemoved.push(user);
 	}
 }
