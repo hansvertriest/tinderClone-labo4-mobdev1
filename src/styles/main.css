@@ -31,6 +31,18 @@ body {
 	padding: 12px;
 	background-color: var(--bg-color);
 }
+
+@media only screen and (max-width: 600px) {
+	#app {
+		width: 100vw;
+		border: none;
+		top: 0;
+		height: 100vh;
+		margin: 0;
+	}
+}
+
+
 #mainPage {
 	
 }
@@ -41,6 +53,8 @@ header {
     align-items: center;
     margin-bottom: 10px;
     min-width: 100%;
+    box-shadow: 0 2px 3px grey;
+    padding: 0 5px;
 }
 
 .iconHeader i{
@@ -60,13 +74,38 @@ main{
 	flex-direction: column;
 	justify-content: flex-end;
 }
-.profile {
 
+#accountSection {
+	display:flex;
+	flex-wrap: wrap;
+	font-family: 'Raleway';
+	justify-content: space-between;
 }
 
-#img {
+.profile {
+	position:relative;
+	margin-bottom: 20px;
+}
+
+#userImgHome {
+	z-index: 1000;
+	position: relative;
 	width: 100%;
 	height: 350px;
+	background-size: cover;
+	border-radius: 20px;
+	box-shadow: 0 -2px 10px var(--grey-dark);
+	margin-top: 15px;
+	
+}
+#userImgHome2 {
+	border-radius: 20px;
+	position: absolute;
+	bottom: 10px;
+	width: 100%;
+	height: 350px;
+	left: 0;
+	right: 0;
 	background-size: cover;
 }
 
@@ -77,17 +116,23 @@ h1 {
 	flex-shrink: 0;
 }
 #data{
+	z-index: 1001;
 	display: flex;
 	justify-content: space-between;
 	flex-wrap: wrap;
 	align-items: center;
-	margin: 15px auto 10px 0;
+	margin: 0px auto 10px 0;
 	width: 95%;
 	height: 80px;
+	position: absolute;
+	bottom: 2px;
+	color: var(--bg-color);
+	text-shadow: 2px 2px 8px black;
+	padding: 0 8px;
 }
 #data #dist {
 	font-size: 28px;
-	color: var(--grey-dark);
+	color: var(--grey-light);
 	margin: 0px 0 0 10px;
 	font-family: 'Raleway';
 }
@@ -136,6 +181,63 @@ hr {
     height: 86px;
     background-size: cover;
     border-radius: 50%;
+}
+
+/* swipe animation */
+
+.swipeRight {
+	position: relative;
+	background-color: 0 0 6px green;
+	border: 3px solid green;
+	animation: swipeRight 0.3s forwards;
+}
+
+@keyframes swipeRight {
+  	0% {
+		left: 0;
+		border-radius: 20px;
+		opacity: 100%;
+		transform:rotate(0deg);
+  	}
+
+	80% {
+		transform-origin: bottom left;
+		transform:rotate(4deg);
+	}
+
+	100% {
+		border-radius: 60%;
+		left: 70px;
+		opacity: 0%;
+  	}
+}
+
+.swipeLeft {
+	position: relative;
+	background-color: 0 0 6px green;
+	border: 3px solid green;
+	animation: swipeLeft 0.3s forwards;
+	background-color: 0 0 6px green;
+}
+
+@keyframes swipeLeft {
+  	0% {
+		right: 0;
+		opacity: 100%;
+		border-radius: 20px;
+		transform:rotate(0deg);
+  	}
+
+	80% {
+		transform-origin: bottom right;
+		transform:rotate(-4deg);
+	}
+
+	100% {
+		border-radius: 60%;
+		right: 50px;
+		opacity: 0%;
+  	}
 }
 
 /* MenuPage */
@@ -225,8 +327,8 @@ hr {
 /* loadingscreen */
 #loadingContainer {
 	background-color: var(--var-red);
-	height: 100%;
-	width: 100%;
+	height: 100vh;
+	width: 100vw;
 	display:flex;
 	justify-content: center;
 	align-items: center;
@@ -315,10 +417,16 @@ hr {
 /* popup */
 
 #popup {
+	z-index: 1002;
 	font-family: 'Raleway';
 	width: 300px;
 	height: 100px;
 	position: absolute;
 	top: 200px;
 	background-color: var(--bg-color);
+	margin: auto auto;
+	padding: 10px;
+	display:flex;
+	flex-direction: column;
+	box-shadow: 0 8px 10px ;
 }

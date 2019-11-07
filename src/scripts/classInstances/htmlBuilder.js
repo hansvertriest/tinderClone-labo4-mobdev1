@@ -82,8 +82,9 @@ class Builder {
 		// main
 		const main = document.createElement('main');
 		// ---profile
-		const profile = document.createElement('profile');
-		profile.innerHTML += '<div id="img"></div>';
+		const profile = document.createElement('div');
+		profile.classList.add('profile');
+		profile.innerHTML += '<div class="userImgContainer"> </div><div id="userImgHome"></div><div id="userImgHome2"></div></div>';
 		const data = document.createElement('div');
 		data.setAttribute('id', 'data');
 		data.innerHTML = '<h1 id="nameAge"></h1><div id="dist"></div>';

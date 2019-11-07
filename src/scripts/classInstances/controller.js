@@ -1,3 +1,5 @@
+import Hammer from 'hammerjs';
+
 import Storage from '../storageClasses/storageClass';
 import Authentication from './authentication';
 import DisplayHandler from '../displayClasses/displayHandlerClass';
@@ -14,12 +16,12 @@ export default class Controller {
 		this.imgsWithListener = [];
 
 		this.menuPage = document.getElementById('menuPage');
-		this.menuBtn = document.getElementById('menuBtn');
 		this.homeBtn = document.getElementById('homeBtn');
-
 		this.goToDislikedBtn = document.getElementById('goToDislikedBtn');
 		this.goToLikedBtn = document.getElementById('goToLikedBtn');
 
+		this.userImgHome = document.getElementById('userImgHome');
+		this.menuBtn = document.getElementById('menuBtn');
 		this.rejectBtn = document.getElementById('rejectBtn');
 		this.likeBtn = document.getElementById('likeBtn');
 		this.signOutBtn = document.getElementById('signOutBtn');
@@ -58,6 +60,29 @@ export default class Controller {
 		});
 	}
 
+	async swipeHandler(event) {
+		const { deltaX } = event;
+		const animation = (deltaX < 0) ? 'swipeLeft' : 'swipeRight';
+		this.userImgHome.classList.add(animation);
+
+		// after animation, do like / dislike actions
+		setTimeout(async () => {
+			if (animation === 'swipeRight') {
+				// same actions as likeBtn clicked
+				Storage.addLike(Storage.displayedUser.value);
+				await UserFetcher.checkNeedForNewUsers();
+				Storage.getNextDisplayedUser();
+				this.homeDisplay.updateDOM();
+			} else {
+				// same actions as dislikeBtn clicked
+				Storage.removeLike(Storage.displayedUser.value);
+				await UserFetcher.checkNeedForNewUsers();
+				Storage.getNextDisplayedUser();
+				this.homeDisplay.updateDOM();
+			}
+		}, 300);
+	}
+
 	addListeners() {
 		// homeDislay events
 		this.likeBtn.addEventListener('click', async () => {
@@ -83,6 +108,11 @@ export default class Controller {
 			const { long, lat } = Storage.displayedUser.value.coords;
 			this.locationDisplay.updateCircle(long, lat);
 			this.locationDisplay.goToCoords(long, lat);
+		});
+		this.signOutBtn.addEventListener('click', (event) => {
+			event.preventDefault();
+			Storage.clearTempStorage();
+			Authentication.signout();
 		});
 		// menuDisplay events
 		this.homeBtn.addEventListener('click', () => {
@@ -124,11 +154,6 @@ export default class Controller {
 				this.authDisplay.clearFields();
 			}
 		});
-		this.signOutBtn.addEventListener('click', (event) => {
-			event.preventDefault();
-			Storage.clearTempStorage();
-			Authentication.signout();
-		});
 		this.goToSignupForm.addEventListener('click', (event) => {
 			event.preventDefault();
 			this.authDisplay.switchToSignupForm();
@@ -146,6 +171,18 @@ export default class Controller {
 		this.submitForgotPassword.addEventListener('click', (event) => {
 			event.preventDefault();
 			Authentication.sendPasswordReset(this.emailForgotPassword.value);
+		});
+
+		// upload before quitting
+		window.addEventListener('beforeunload', () => {
+			Storage.upload();
+		}, false);
+
+		// swiping support
+		const manager = new Hammer.Manager(this.userImgHome);
+		manager.add(new Hammer.Swipe({ event: 'swipe' }));
+		manager.on('swipe', (event) => {
+			this.swipeHandler(event);
 		});
 	}
 }

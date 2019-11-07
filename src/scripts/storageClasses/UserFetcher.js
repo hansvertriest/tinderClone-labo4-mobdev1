@@ -1,6 +1,7 @@
 import Storage from './storageClass';
 import User from './userClass';
 import Location from '../classInstances/location';
+import Popup from '../displayClasses/popupDisplayClass';
 
 class UserFetcher {
 	getData() {
@@ -11,7 +12,7 @@ class UserFetcher {
 	// check if new users should be loaded (when there are only 3 users left)
 	async checkNeedForNewUsers() {
 		return new Promise((resolve) => {
-			if (Storage.users.getArray.length <= 3) {
+			if (Storage.users.getArray.length <= Storage.userFetchBuffer) {
 				this.getNewUsers().then(() => { resolve(); });
 			} else {
 				resolve();
@@ -22,11 +23,13 @@ class UserFetcher {
 	async getNewUsers() {
 		Storage.download();
 		Storage.users.setArray = [];
-		const userDataJSON = await this.getData(Storage.numberOfUsers);
+		const userDataJSON = await this.getData(Storage.numberOfUsers)
+			.catch(() => new Popup('Seems like randomuser.me is currently unavailable!'));
 
 		// For every user: fetch coordinates, then create a User object with userdata, then add this to Storage.users
 		return new Promise((resolve) => {
-			Array.from(userDataJSON.results).forEach(async (user) => {
+			let completionCounter = 0;
+			Array.from(userDataJSON.results).forEach(async (user, index) => {
 				// await the response of the geocoder, then create instance of User
 				Location.getLocationFromAdress(user.location.city.replace(' ', '_'), user.location.street.name.replace(' ', '_'), user.location.coordinates)
 					.then((response) => {
@@ -46,9 +49,11 @@ class UserFetcher {
 						Storage.users.add(newUser);
 					})
 					.then(() => {
-						// display a new user
-						Storage.getNextDisplayedUser();
-						resolve();
+						// resolve when all users have been made
+						completionCounter += 1;
+						if (userDataJSON.results.length === completionCounter) {
+							resolve();
+						}
 					});
 			});
 		});

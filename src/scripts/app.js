@@ -1,5 +1,4 @@
 import '../styles/main.css';
-
 import Firebase from 'firebase';
 import Firebaseconfig from './storageClasses/firebase_config';
 
@@ -23,7 +22,8 @@ Firebase.initializeApp(Firebaseconfig);
 Storage.initDB();
 
 // application parameters
-Storage.setNumberOfUsers = 10;
+Storage.setNumberOfUsers = 5;
+Storage.setUserFetchBuffer = 3;
 
 // instances of displays and controller
 const homeContainer = document.getElementById('homeContainer');
@@ -69,7 +69,8 @@ async function init() {
 				const popup = new Popup('Please make sure to verify your email adress!');
 				popup.build();
 			}
-
+			// set first user on homeDisplay
+			Storage.getNextDisplayedUser();
 			// Update both displays
 			homeDisplay.updateDOM();
 			menuDisplay.updateDOM();

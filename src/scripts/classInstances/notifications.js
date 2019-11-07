@@ -6,18 +6,19 @@ class Notifications {
 	}
 
 	async checkPermision() {
-		return Notification.requestPermission((response) => {
-			if (response === 'denied') {
-				return false;
-			}
-			return true;
+		return new Promise((resolve, reject) => {
+			Notification.requestPermission((response) => {
+				if (response === 'denied') {
+					reject();
+				} else {
+					resolve();
+				}
+			});
 		});
 	}
 
 	push(msg) {
-		if (!('Notification' in window)) {
-			alert('No notifications supported');
-		} else if (Notification.permission === 'granted') {
+		if (('Notification' in window) && Notification.permission === 'granted') {
 			const notification = new Notification(msg, { icon: this.icon });
 		}
 	}
