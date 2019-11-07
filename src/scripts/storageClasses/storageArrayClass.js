@@ -3,6 +3,7 @@ import Data from './storageDataClass';
 export default class StorageArray extends Data {
 	constructor(name) {
 		super(name, []);
+		this.name = name;
 		this.array = [];
 		this.isRemoved = [];
 		this.isAdded = [];

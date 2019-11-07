@@ -33,6 +33,7 @@ class Storage {
 	// randomly pick a user to show next
 	getNextDisplayedUser() {
 		const usersSortedRandomly = this.users.getArray.sort(() => 0.5 - Math.random());
+		console.log(usersSortedRandomly);
 		const [a, b] = usersSortedRandomly;
 		// if displayedUser is empty
 		if (this.displayedUser.getValue.id === undefined) {
@@ -117,23 +118,23 @@ class Storage {
 	}
 
 	addLike(user) {
-		this.users.remove(user);
-		this.disliked.remove(user);
-		this.upload();
 		// if this id isn't already in liked
 		if (!this.liked.getArray.includes(user)) {
 			this.liked.add(user);
 		}
+		this.users.remove(user);
+		this.disliked.remove(user);
+		this.upload();
 	}
 
 	removeLike(user) {
-		this.users.remove(user);
-		this.liked.remove(user);
-		this.upload();
 		// if this id isn't already in disliked
 		if (!this.disliked.getArray.includes(user)) {
 			this.disliked.add(user);
 		}
+		this.users.remove(user);
+		this.liked.remove(user);
+		this.upload();
 	}
 
 	removeAssignment(user) {

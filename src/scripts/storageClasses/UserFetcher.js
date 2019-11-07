@@ -12,7 +12,7 @@ class UserFetcher {
 	// check if new users should be loaded (when there are only 3 users left)
 	async checkNeedForNewUsers() {
 		return new Promise((resolve) => {
-			if (Storage.users.getArray.length <= Storage.userFetchBuffer) {
+			if (Storage.users.getArray.length < Storage.userFetchBuffer) {
 				this.getNewUsers().then(() => { resolve(); });
 			} else {
 				resolve();
